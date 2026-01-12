@@ -1,5 +1,5 @@
 body{
-    font-family: "Comic Sans MS";
+    font-family: 'Fredoka One', cursive;
     color: #003167;
     background-color: paleturquoise;
 }
@@ -113,10 +113,6 @@ h1{
 
 #container-cartes img {
     max-width: none;
-}
-
-body {
-    font-family: "Comic Sans MS", cursive, sans-serif;
 }
 
 .win-modal {
