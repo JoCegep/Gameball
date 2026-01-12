@@ -1,0 +1,205 @@
+body{
+    font-family: "Comic Sans MS";
+    color: #003167;
+    background-color: paleturquoise;
+}
+
+h1{
+    font-size: 50px;
+    text-align: center;
+}
+
+#container-cartes{
+    display: flex;
+    flex-wrap: wrap;
+    align-content: center;
+    align-items: center;
+    justify-content: center;
+    margin-left: auto;
+    margin-right: auto;
+    width: 65vw;
+    height: 70vh;
+    z-index: 2;
+}
+
+#container-cartes div{
+    display: block;
+    border-radius: 10px;
+    border: 4px solid #003167;
+    height: 119px;
+    width: 155px;
+    align-content: center;
+    align-items: center;
+    text-align: center;
+    margin: 10px;
+    transition: 200ms;
+    background-color: white;
+
+    box-shadow: 2px 2px 15px #44677d;
+}
+
+#container-cartes div:hover{
+    transform: scale(1.1);
+    cursor: pointer;
+    opacity: 0.75;
+}
+
+#container-cartes div img{
+    display: block;
+    height: 114px;
+    width: 150px;
+    transition: 200ms;
+    margin: auto;
+    transition: 200ms;
+}
+
+.invisible{
+    display: none;
+    position: absolute;
+    left: -9999px; /* solution suggeree par le ai overview car rien ne fonctionnait pour
+    enlever l img en gardant le ❓ au centre de la div*/
+    text-align: center;
+    transition: 200ms;
+    opacity: 0;
+}
+
+#menuIcon{
+    transition: 200ms;
+}
+
+#menuIcon:hover{
+    transform: scale(1.1);
+}
+
+#pointage{
+    display: flex;
+    flex-wrap: wrap;
+    align-content: center;
+    align-items: center;
+    justify-content: center;
+    margin-left: auto;
+    margin-right: auto;
+    background-color: #00132c;
+    border-radius: 10px;
+    width: 65vw;
+    height: 15vh;
+    color: white;
+
+    box-shadow: 2px 2px 15px #44677d;
+}
+
+#pointage div img{
+    filter: invert(100%); /* ai overview answer to invert img color */
+    transition: 200ms;
+}
+
+#pointage div img:hover{
+    filter: invert(100%); /* ai overview answer to invert img color */
+    cursor: pointer;
+    transform: scale(1.1);
+    opacity: 0.5;
+}
+
+#pointage div{
+    margin: auto;
+    text-align: center;
+}
+
+*,
+*::before,
+*::after {
+    box-sizing: content-box;
+}
+
+#container-cartes img {
+    max-width: none;
+}
+
+body {
+    font-family: "Comic Sans MS", cursive, sans-serif;
+}
+
+.win-modal {
+    border-radius: 24px;
+    background: #e7f1ff;
+    border: none;
+    padding: 2rem;
+}
+
+.win-banner {
+    position: absolute;
+    top: -20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #084298;
+    padding: 0.5rem 1.5rem;
+    border-radius: 999px;
+    font-weight: bold;
+    color: white;
+}
+
+.stars {
+    font-size: 2rem;
+    color: gold;
+}
+
+.actions button {
+    width: 60px;
+    height: 60px;
+    border-radius: 16px;
+}
+
+#container-utilisateur{
+    box-shadow: 2px 2px 15px #44677d;
+    background-color: white;
+    border-radius: 10px;
+}
+
+#container-stats{
+    box-shadow: 2px 2px 15px #44677d;
+    background-color: white;
+    border-radius: 10px;
+    width: 85%;
+    align-self: center;
+}
+
+.offcanvas{
+    background-color: paleturquoise;
+}
+
+#compteIcon{
+    transition: 200ms;
+}
+
+/* account btn hover */
+#compteIcon:hover{
+    cursor: pointer;
+    transform: scale(1.1);
+    opacity: 0.5;
+}
+
+#logoutIcon{
+    transition: 200ms;
+}
+
+/* logout btn hover */
+#logoutIcon:hover{
+    cursor: pointer;
+    transform: scale(1.1);
+    opacity: 0.5;
+}
+
+#backIcon{
+    transition: 200ms;
+}
+
+#backIcon:hover{
+    cursor: pointer;
+    transform: scale(1.1);
+    opacity: 0.5;
+}
+
+/* Hidden state */
+.hidden {
+    display: none;
+}

@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>GameBall</title>
+    <script src="js/jquery-3.6.0.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+    <script src="script.js" type="module" defer></script>
+    <script src="Auth.js" type="module" defer></script>
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" type="image/png" href="img/gblogov6.png">
+</head>
+<body>
+<div id="loginSuccessOverlay" class="overlay hidden">
+    <div class="overlay-card">
+        <h1>Success</h1>
+        <p>You’re signed in and ready to play!</p>
+        <button id="continueBtn">Start</button>
+    </div>
+</div>
+
+
+<div id="container-total">
+    <div id="btnMenu" class="hidden">
+        <img id="menuIcon"src="img/menu.png" alt="menu icon" width="30" height="30" class="m-3" data-bs-toggle="offcanvas" data-bs-target="#offcanvasWithBothOptions" aria-controls="offcanvasWithBothOptions">
+    </div>
+
+    <div id="btnCompte" class="hidden">
+        <img id="compteIcon" src="img/user.png" width="30" height="30" alt="account icon" class="m-3" data-bs-toggle="offcanvas" data-bs-target="#offCanvasJeu" aria-controls="offCanvasJeu">
+    </div>
+
+    <div class="offcanvas offcanvas-start" data-bs-scroll="false" tabindex="-1" id="offcanvasWithBothOptions" aria-labelledby="offcanvasWithBothOptionsLabel">
+        <div class="offcanvas-header justify-content-center position-relative">
+            <h5 class="offcanvas-title mx-auto fs-3 fw-bold text-primary" id="offcanvasWithBothOptionsLabel">GameBall</h5>
+            <button type="button" class="btn-close position-absolute end-0 me-2" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body">
+            <div id="container-variant" class="container-sm p-3">
+                <div class="btn-group d-flex justify-content-center" role="group" aria-label="Basic radio toggle button group">
+                    <input type="radio" class="btn-check d-block mx-auto" name="btnradio" id="registerBtn" autocomplete="off" checked>
+                    <label class="btn btn-outline-primary" for="registerBtn">Register</label>
+
+                    <input type="radio" class="btn-check d-block mx-auto" name="btnradio" id="loginBtn" autocomplete="off">
+                    <label class="btn btn-outline-primary" for="loginBtn">Login</label>
+                </div>
+
+                <div id="container-connexion" class="container-sm">
+                    <p class="text-center m-5 fw-bold text-primary">Welcome back</p>
+                    <button id="btnConnexionGoogle" type="button" class="btn btn-light btn-outline-primary btn-lg fw-bold d-block mx-auto"><img src="img/googleLogo.png" alt="google logo" width="30" height="30" class="me-3">Google Sign in</button>
+                </div>
+
+                <div id="container-creation" class="container-sm">
+                    <p class="text-center m-5 fw-bold text-primary">Create a GameBall account</p>
+                    <button id="btnCreationGoogle" type="button" class="btn btn-light btn-outline-primary btn-lg fw-bold d-block mx-auto"><img src="img/googleLogo.png" alt="google logo" width="30" height="30" class="me-3">With Google</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Offcanvas account -->
+    <div class="offcanvas offcanvas-start" data-bs-scroll="false" tabindex="-1" id="offCanvasJeu" aria-labelledby="offCanvasJeu">
+        <div class="offcanvas-header justify-content-center position-relative">
+            <button type="button" class="btn-close position-absolute end-0 me-2" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body">
+            <div id="container-utilisateur" class="m-1 container-xs row justify-content-start">
+                <div class="mt-5 mb-5 row align-items-center justify-content-between">
+                    <div>
+                        <p class="h6 mx-auto fs-3 fw-bold text-primary text-center">Your account</p>
+                    </div>
+
+                    <div class="mt-1 col d-flex align-items-center gap-3">
+                        <img id="accountIcon" src="img/account.png" alt="account icon">
+                        <p id="pseudo" class="h4 fw-bold text-secondary mb-0"></p>
+                    </div>
+
+                    <div class="mt-1 col-auto">
+                        <img id="logoutIcon" src="img/log-out.png" alt="logout icon">
+                    </div>
+
+                    <div id="container-stats" class="ms-3 mt-5">
+                        <div class="col">
+                            <p class="mt-3 h5 fw-bold text-primary mb-0">Game stats</p>
+                            <hr>
+                        </div>
+
+                        <div class="d-flex align-items-center gap-3">
+                            <img id="memoryIcon" src="img/monke.png" alt="memory icon" width="100" height="100">
+                            <div class="row">
+                                <p class="h6 fw-bold text-primary mb-0">Highscore: </p>
+                                <p id="essais" class="h3 fw-bold text-secondary mb-0"></p>
+                            </div>
+
+                            <div class="row">
+                                <p class="h6 fw-bold text-primary mb-0">Best time: </p>
+                                <p id="temps-record" class="h3 fw-bold text-secondary mb-0"></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="container-jeux" class="">
+        <a href="memoire.html" class="game-link mx-auto d-block"><img class="jeu img-thumbnail rounded mt-5 mx-auto d-block" src="img/monke.png" width="512" height="512" alt="volleyball memory game image"></a>
+    </div>
+</div>
+</body>
+</html>

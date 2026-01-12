@@ -1,0 +1,17 @@
+{
+  "name": "design-site-de-jeux-jocegep",
+  "version": "1.0.0",
+  "description": "",
+  "main": "Auth.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/420-interface-web/design-site-de-jeux-JoCegep.git"
+  },
+  "private": true,
+  "dependencies": {
+    "firebase": "^12.7.0"
+  }
+}
