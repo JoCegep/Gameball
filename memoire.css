@@ -36,6 +36,10 @@ h1{
     background-color: white;
 
     box-shadow: 2px 2px 15px #44677d;
+
+    /* for shuffle*/
+    /*transition: transform 350ms ease;*/
+    will-change: transform;
 }
 
 #container-cartes div:hover{
@@ -198,4 +202,10 @@ h1{
 /* Hidden state */
 .hidden {
     display: none;
+}
+
+#container-premium{
+    box-shadow: 2px 2px 15px #44677d;
+    background-color: white;
+    border-radius: 10px;
 }

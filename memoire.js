@@ -11,6 +11,7 @@ const auth = getAuth(app);
 const db = getFirestore(app);
 const btnLogout = document.getElementById("logoutIcon");
 const btnCompte = document.getElementById("compteIcon");
+const btnMix = document.getElementById("btnMix");
 
 let currentUser = null;
 
@@ -225,6 +226,11 @@ for (let i = 0; i < cartes.length; i++) {
             let vCarte1 = cartesComparees[0].dataset.valeurCarte;
             let vCarte2 = cartesComparees[1].dataset.valeurCarte;
             if (vCarte1 === vCarte2) {
+                if (true) // if user has premium
+                {
+                    shuffleCardsPremium();
+                }
+
                 cartesComparees[0].style.pointerEvents = "none";
                 cartesComparees[1].style.pointerEvents = "none";
                 cartesComparees = []
@@ -301,6 +307,44 @@ for (let i = 0; i < cartes.length; i++) {
 let tempStart = false;
 let nbEssaisVal = 0;
 let cartesComparees = []
+
+btnMix.addEventListener("click", async function () {
+    shuffleCardsPremium();
+})
+
+function shuffleCardsPremium() {
+    const cards = Array.from(containerCartes.children);
+
+    // FIRST
+    const firstRects = cards.map(card => card.getBoundingClientRect());
+
+    // SHUFFLE DOM
+    for (let i = cards.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        containerCartes.insertBefore(cards[j], cards[i]);
+        [cards[i], cards[j]] = [cards[j], cards[i]];
+    }
+
+    // LAST
+    const lastRects = cards.map(card => card.getBoundingClientRect());
+
+    // INVERT
+    cards.forEach((card, i) => {
+        const dx = firstRects[i].left - lastRects[i].left;
+        const dy = firstRects[i].top - lastRects[i].top;
+
+        card.style.transition = "none";
+        card.style.transform = `translate(${dx}px, ${dy}px)`;
+    });
+
+    // PLAY (next frame)
+    requestAnimationFrame(() => {
+        cards.forEach(card => {
+            card.style.transition = "transform 350ms ease";
+            card.style.transform = "";
+        });
+    });
+}
 
 function afficherUser(){
     if (utilisateurConnecte != null){
