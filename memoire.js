@@ -175,6 +175,8 @@ for (let i = 0; i < cartes.length; i++) {
 
     let carteImg = document.createElement("div");
     carteImg.append(carteBaseImg, carteValeurImg);
+    carteImg.baseImg = carteBaseImg;
+    carteImg.valeurImg = carteValeurImg;
     carteImg.dataset.valeurCarte = cartes[i][1];
     carteImg.setAttribute("face", "hidden");
 
@@ -309,7 +311,34 @@ let nbEssaisVal = 0;
 let cartesComparees = []
 
 btnMix.addEventListener("click", async function () {
+    console.log(cartesComparees);
+    for (let carte of lstCartes) {
+        carte.baseImg.src = "img/monkechaos.png";
+    }
+
+    // changer images
+    btnLogout.src = "img/log-outchaos.png";
+    document.getElementById("accountIcon").src = "img/accountchaos.png";
+    document.getElementById("memoryIcon").src = "img/monkechaos.png";
+
+    document.body.classList.add("chaos-theme");
+    document
+        .getElementById("ShuffleSuccessOverlay")
+        .classList.remove("hidden");
     shuffleCardsPremium();
+})
+
+document.getElementById("continueShuffleBtn").addEventListener("click", () => {
+    document
+        .getElementById("ShuffleSuccessOverlay")
+        .classList.add("hidden");
+
+    // fermer offcanvas
+    let offcanvas = document.getElementById("offCanvasJeu")
+
+    let bsoffcanvas = bootstrap.Offcanvas.getInstance(offcanvas);
+
+    bsoffcanvas.hide()
 })
 
 function shuffleCardsPremium() {

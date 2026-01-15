@@ -1,7 +1,45 @@
+:root{
+    /* Blue theme variables */
+
+    /* body */
+    --body-color: #003167;
+    --body-bg-color: paleturquoise;
+
+    /* container cartes div */
+    --border: 4px solid #003167;
+    --shadow: 2px 2px 15px #44677d;
+
+    /* pointage */
+    --p-bg-color: #00132c;
+
+    /* w banner */
+    --bg-w-banner: #084298;
+}
+
+.chaos-theme{
+    --body-color: #670000FF;
+    --body-bg-color: #EEAFAFFF;
+
+    /* container cartes div */
+    --border: 4px solid #670000;
+    --shadow: 2px 2px 15px #7d4444;
+
+    /* pointage */
+    --p-bg-color: #2c0000;
+
+    /* w banner */
+    --bg-w-banner: #980808;
+
+    /* offcanvas txt color */
+    --bs-primary: #fc0d0d;
+    --bs-secondary: #7d6b6b;
+}
+
 body{
     font-family: 'Fredoka One', cursive;
-    color: #003167;
-    background-color: paleturquoise;
+    color: var(--body-color);
+    background-color: var(--body-bg-color);
+    transition: background-color 0.3s, color 0.3s;
 }
 
 h1{
@@ -25,7 +63,7 @@ h1{
 #container-cartes div{
     display: block;
     border-radius: 10px;
-    border: 4px solid #003167;
+    border: var(--border);
     height: 119px;
     width: 155px;
     align-content: center;
@@ -35,7 +73,7 @@ h1{
     transition: 200ms;
     background-color: white;
 
-    box-shadow: 2px 2px 15px #44677d;
+    box-shadow: var(--shadow);
 
     /* for shuffle*/
     /*transition: transform 350ms ease;*/
@@ -83,13 +121,13 @@ h1{
     justify-content: center;
     margin-left: auto;
     margin-right: auto;
-    background-color: #00132c;
+    background-color: var(--p-bg-color);
     border-radius: 10px;
     width: 65vw;
     height: 15vh;
     color: white;
 
-    box-shadow: 2px 2px 15px #44677d;
+    box-shadow: var(--shadow);
 }
 
 #pointage div img{
@@ -131,7 +169,7 @@ h1{
     top: -20px;
     left: 50%;
     transform: translateX(-50%);
-    background: #084298;
+    background: var(--bg-w-banner);
     padding: 0.5rem 1.5rem;
     border-radius: 999px;
     font-weight: bold;
@@ -150,13 +188,13 @@ h1{
 }
 
 #container-utilisateur{
-    box-shadow: 2px 2px 15px #44677d;
+    box-shadow: var(--shadow);
     background-color: white;
     border-radius: 10px;
 }
 
 #container-stats{
-    box-shadow: 2px 2px 15px #44677d;
+    box-shadow: var(--shadow);
     background-color: white;
     border-radius: 10px;
     width: 85%;
@@ -164,7 +202,20 @@ h1{
 }
 
 .offcanvas{
-    background-color: paleturquoise;
+    background-color: var(--body-bg-color);
+}
+
+.text-primary {
+    color: var(--bs-primary) !important;
+}
+
+.text-secondary {
+    color: var(--bs-secondary) !important;
+}
+
+.btn-primary{
+    background-color: var(--bs-primary) !important;
+    border-color: var(--bs-primary);
 }
 
 #compteIcon{
@@ -205,7 +256,61 @@ h1{
 }
 
 #container-premium{
-    box-shadow: 2px 2px 15px #44677d;
+    box-shadow: var(--shadow);
     background-color: white;
     border-radius: 10px;
+}
+
+/* for overlays */
+/* Fullscreen overlay */
+.overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(80, 0, 0, 0.65);
+    backdrop-filter: blur(6px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+}
+
+/* Hidden state */
+.hidden {
+    display: none;
+}
+
+/* Card */
+.overlay-card {
+    background: #a30b0b;
+    color: white;
+    padding: 40px 60px;
+    border-radius: 16px;
+    text-align: center;
+    max-width: 420px;
+    width: 90%;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.4);
+}
+
+.overlay-card h1 {
+    font-size: 42px;
+    margin-bottom: 10px;
+}
+
+.overlay-card p {
+    opacity: 0.9;
+    margin-bottom: 30px;
+}
+
+.overlay-card button {
+    background: #ff1e1e;
+    border: none;
+    color: white;
+    padding: 14px 28px;
+    font-size: 16px;
+    border-radius: 999px;
+    cursor: pointer;
+}
+
+.overlay-card button:hover {
+    background: #e61414;
 }
