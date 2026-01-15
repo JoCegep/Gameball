@@ -117,3 +117,24 @@ document
             console.error("Logout failed:", error);
         }
     });
+
+// popover
+const btn = document.getElementById("menuIcon");
+
+const popover = new bootstrap.Popover(btn, {
+    content: "Log in to unlock extra game modes 🔓",
+    placement: "right",
+    trigger: "manual"
+});
+
+// show only if user is NOT logged in
+if (!currentUser) {
+    setTimeout(() => {
+        popover.show();
+    }, 800);
+
+    // auto-hide after a few seconds
+    setTimeout(() => {
+        popover.hide();
+    }, 6000);
+}
