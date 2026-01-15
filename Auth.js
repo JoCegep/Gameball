@@ -6,7 +6,7 @@ import {
     onAuthStateChanged
 } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
-import { getFirestore, doc, getDoc, setDoc } from
+import { getFirestore, doc, getDoc, setDoc, updateDoc } from
         "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
 const firebaseConfig = {
@@ -57,8 +57,18 @@ async function ensureUserDoc(user) {
         await setDoc(ref, {
             username: user.displayName,
             bestAttempts: null,
-            bestTime: null
+            bestTime: null,
+            freeGames: 2
         });
+    } else {
+        // Existing user → check for missing fields
+        const data = snap.data();
+
+        if (data.freeGames === undefined) {
+            await updateDoc(ref, {
+                freeGames: 2
+            });
+        }
     }
 }
 
