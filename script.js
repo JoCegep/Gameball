@@ -118,23 +118,43 @@ document
         }
     });
 
-// popover
-const btn = document.getElementById("menuIcon");
+// // popover
+// const btn = document.getElementById("menuIcon");
+//
+// const popover = new bootstrap.Popover(btn, {
+//     content: "Log in to unlock extra game modes 🔓",
+//     placement: "right",
+//     trigger: "manual"
+// });
+//
+// // show only if user is NOT logged in
+// if (!currentUser) {
+//     setTimeout(() => {
+//         popover.show();
+//     }, 800);
+//
+//     // auto-hide after a few seconds
+//     setTimeout(() => {
+//         popover.hide();
+//     }, 6000);
+// }
 
-const popover = new bootstrap.Popover(btn, {
-    content: "Log in to unlock extra game modes 🔓",
-    placement: "right",
-    trigger: "manual"
-});
+// toast icon
+const toastEl = document.getElementById("loginToast");
+const loginToast = new bootstrap.Toast(toastEl);
 
-// show only if user is NOT logged in
-if (!currentUser) {
-    setTimeout(() => {
-        popover.show();
-    }, 800);
 
-    // auto-hide after a few seconds
-    setTimeout(() => {
-        popover.hide();
-    }, 6000);
-}
+setTimeout(async () => {
+    if (!currentUser) {
+        setTimeout(() => {
+            loginToast.show();
+        }, 800);
+
+        // auto-hide after a few seconds
+        // setTimeout(() => {
+        //     loginToast.hide();
+        // }, 6000);
+    } else {
+        loginToast.hide();
+    }
+}, 2000);
