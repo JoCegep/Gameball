@@ -41,6 +41,26 @@ onAuthStateChanged(auth, async (user) => {
     }
 });
 
+// toast icon
+const toastEl = document.getElementById("loginToast");
+const loginToast = new bootstrap.Toast(toastEl);
+
+
+setTimeout(async () => {
+    if (!currentUser) {
+        setTimeout(() => {
+            loginToast.show();
+        }, 100);
+
+        // auto-hide after a few seconds
+        // setTimeout(() => {
+        //     loginToast.hide();
+        // }, 6000);
+    } else {
+        loginToast.hide();
+    }
+}, 2000);
+
 async function saveScore(attempts, time) {
     const user = auth.currentUser;
     if (!user) return;

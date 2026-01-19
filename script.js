@@ -122,9 +122,10 @@ document
 const btn = document.getElementById("menuIcon");
 
 const popover = new bootstrap.Popover(btn, {
-    content: "Log in to unlock extra game modes 🔓",
+    content: "Log in to unlock extra game modes",
     placement: "right",
-    trigger: "manual"
+    trigger: "manual",
+    customClass: "popOverConnexion"
 });
 
 // show only if user is NOT logged in
@@ -132,33 +133,13 @@ setTimeout(async () => {
     if (!currentUser) {
         setTimeout(() => {
             popover.show();
-        }, 800);
+        }, 100);
 
         // auto-hide after a few seconds
         setTimeout(() => {
             popover.hide();
-        }, 3000);
+        }, 4000);
     } else {
         popover.hide();
     }
-}, 2000);
-
-// toast icon
-const toastEl = document.getElementById("loginToast");
-const loginToast = new bootstrap.Toast(toastEl);
-
-
-setTimeout(async () => {
-    if (!currentUser) {
-        setTimeout(() => {
-            loginToast.show();
-        }, 800);
-
-        // auto-hide after a few seconds
-        // setTimeout(() => {
-        //     loginToast.hide();
-        // }, 6000);
-    } else {
-        loginToast.hide();
-    }
-}, 2000);
+}, 400);

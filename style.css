@@ -154,6 +154,19 @@ body{
     opacity: 0.5;
 }
 
+.popOverConnexion{
+    font-family: 'Fredoka One', cursive;
+    background: #0d6efd;
+    border: 1px solid white;
+    color: white;
+    box-shadow: 2px 2px 15px #44677d;
+    transition: 200ms;
+}
+
+.popover-body {
+    color: #e5e7eb;
+}
+
 /*
 .e-recherche{
     border-color: transparent;
