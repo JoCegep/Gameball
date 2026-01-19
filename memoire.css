@@ -314,3 +314,13 @@ h1{
 .overlay-card button:hover {
     background: #e61414;
 }
+
+#btnMix{
+    transition: 200ms;
+}
+
+#btnMix:hover{
+    cursor: pointer;
+    transform: scale(1.1);
+    opacity: 0.5;
+}
