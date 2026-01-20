@@ -5,6 +5,7 @@ import { getFirestore, doc, getDoc, updateDoc } from
         "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
 import { app } from "./base.js"; // app initialisee
+import { getUserData } from "./Auth.js";
 
 // logique acces a utilisateur connecte
 const auth = getAuth(app);
@@ -329,6 +330,43 @@ for (let i = 0; i < cartes.length; i++) {
 let tempStart = false;
 let nbEssaisVal = 0;
 let cartesComparees = []
+
+// extra modes logic
+function showPaywall(){
+
+}
+
+function decrementFreeUse(uid){
+
+}
+
+function startExtraMode(){
+
+}
+
+function canAccessExtraModes(userData) {
+    if (!userData) return false;
+
+    if (userData.hasPremium) return true;
+
+    return userData.freeGames > 0;
+}
+
+async function onExtraModeClick() {
+    const userData = await getUserData(currentUser.uid);
+
+    if (!canAccessExtraModes(userData)) {
+        showPaywall();
+        return;
+    }
+
+    // Allow access
+    if (!userData.hasPremium) {
+        await decrementFreeUse(currentUser.uid);
+    }
+
+    startExtraMode();
+}
 
 btnMix.addEventListener("click", async function () {
     console.log(cartesComparees);
