@@ -19,32 +19,40 @@ export const auth = getAuth(app);
 const provider = new GoogleAuthProvider();
 
 // logique pop up connexion
-document.getElementById("btnConnexionGoogle").addEventListener("click", async () => {
-    try {
-        await signInWithPopup(auth, provider);
+const btnConnexionGoogle = document.getElementById("btnConnexionGoogle");
+const btnCreationGoogle = document.getElementById("btnCreationGoogle");
 
-        // Show success screen
-        document
-            .getElementById("loginSuccessOverlay")
-            .classList.remove("hidden");
-    } catch (err) {
-        console.error(err);
-    }
-});
+if (btnConnexionGoogle){
+    btnConnexionGoogle.addEventListener("click", async () => {
+        try {
+            await signInWithPopup(auth, provider);
 
-//logique pop up creation
-document.getElementById("btnCreationGoogle").addEventListener("click", async () => {
-    try {
-        await signInWithPopup(auth, provider);
+            // Show success screen
+            document
+                .getElementById("loginSuccessOverlay")
+                .classList.remove("hidden");
+        } catch (err) {
+            console.error(err);
+        }
+    });
+}
 
-        // Show success screen
-        document
-            .getElementById("loginSuccessOverlay")
-            .classList.remove("hidden");
-    } catch (err) {
-        console.error(err);
-    }
-});
+
+if (btnCreationGoogle){
+    //logique pop up creation
+    document.getElementById("btnCreationGoogle").addEventListener("click", async () => {
+        try {
+            await signInWithPopup(auth, provider);
+
+            // Show success screen
+            document
+                .getElementById("loginSuccessOverlay")
+                .classList.remove("hidden");
+        } catch (err) {
+            console.error(err);
+        }
+    });
+}
 
 // creation donnees si nouveau compte
 const db = getFirestore();
@@ -58,7 +66,8 @@ async function ensureUserDoc(user) {
             username: user.displayName,
             bestAttempts: null,
             bestTime: null,
-            freeGames: 2
+            freeGames: 2,
+            hasPremium: false
         });
     } else {
         // Existing user → check for missing fields
@@ -67,6 +76,11 @@ async function ensureUserDoc(user) {
         if (data.freeGames === undefined) {
             await updateDoc(ref, {
                 freeGames: 2
+            });
+        }
+        if (data.hasPremium === undefined) {
+            await updateDoc(ref, {
+                hasPremium: false
             });
         }
     }
@@ -88,3 +102,15 @@ onAuthStateChanged(auth, (user) => {
         console.log("Not logged in");
     }
 });
+
+// helper for user data
+export async function getUserData(uid) {
+    const ref = doc(db, "users", uid);
+    const snap = await getDoc(ref);
+
+    if (!snap.exists()) {
+        return null;
+    }
+
+    return snap.data();
+}
