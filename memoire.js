@@ -207,9 +207,19 @@ for (let i = 0; i < cartes.length; i++) {
             cartesComparees.push(carteImg);
             document.body.style.pointerEvents = 'none';
             cartesComparees[1].style.pointerEvents = "none";
+
             let vCarte1 = cartesComparees[0].dataset.valeurCarte;
             let vCarte2 = cartesComparees[1].dataset.valeurCarte;
-            if (vCarte1 === vCarte2) {
+
+            // --- REVERSE MODE LOGIC ---
+            let isMatch = false;
+            if (reverseModeEnabled) {
+                isMatch = (oppositesMap[vCarte1] === vCarte2);
+            } else {
+                isMatch = (vCarte1 === vCarte2);
+            }
+
+            if (isMatch) {
                 if (chaosModeEnabled)
                 {
                     shuffleCardsPremium();
@@ -232,7 +242,7 @@ for (let i = 0; i < cartes.length; i++) {
 
                     //logic firestore
                     try {
-                    await saveScore(nbEssaisVal, nbTemps.innerText);
+                        await saveScore(nbEssaisVal, nbTemps.innerText);
                     } catch (e) {
                         console.warn("Score not saved:", e);
                     }
@@ -262,6 +272,14 @@ let tempStart = false;
 let nbEssaisVal = 0;
 let cartesComparees = []
 let chaosModeEnabled = false;
+let reverseModeEnabled = false; // Added Reverse Mode toggle
+
+// Opposite Pairs Mapping
+const oppositesMap = {
+    "p1": "p4", "p4": "p1",
+    "p2": "p5", "p5": "p2",
+    "p3": "p6", "p6": "p3"
+};
 
 // extra modes logic
 function showPaywall() {
@@ -340,6 +358,12 @@ function startExtraMode() {
         .classList.remove("hidden");
 
     shuffleCardsPremium();
+}
+
+// Added Reverse Mode function
+function startReverseMode() {
+    reverseModeEnabled = true;
+    // You can add reverse-mode specific UI/theme changes here just like startExtraMode()
 }
 
 function canAccessExtraModes(userData) {
