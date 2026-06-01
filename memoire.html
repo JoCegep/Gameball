@@ -13,6 +13,17 @@
     <link rel="icon" type="image/png" href="memorylogo.png">
 </head>
 <body>
+<div id="ReverseSuccessOverlay" class="overlay hidden">
+    <div class="overlay-card">
+        <h1>Reverse Mode</h1>
+        <br>
+        <h3>Match the opposite rotations!</h3>
+        <br>
+        <p>P1 pairs with P4, P2 with P5, and P3 with P6.</p>
+        <button id="continueReverseBtn">Start</button>
+    </div>
+</div>
+
 <div id="ShuffleSuccessOverlay" class="overlay hidden">
     <div class="overlay-card">
         <h1>Chaos Mode</h1>
@@ -114,6 +125,9 @@
                 <div class="mt-1 col d-flex align-items-center gap-3">
                     <!-- <img id="btnTempsLimite" src="img/monke.png" alt="memory icon" width="100" height="100"> -->
                     <img id="btnMix" src="img/monkechaos.png" alt="memory icon" width="100" height="100">
+
+                    <!-- ADD THIS: Reverse Mode Button -->
+                    <img id="btnReverse" src="img/monkeoppo.png" alt="reverse mode icon" width="100" height="100">
                 </div>
                 </div>
             </div>

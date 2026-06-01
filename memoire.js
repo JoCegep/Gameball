@@ -207,21 +207,19 @@ for (let i = 0; i < cartes.length; i++) {
             cartesComparees.push(carteImg);
             document.body.style.pointerEvents = 'none';
             cartesComparees[1].style.pointerEvents = "none";
-
             let vCarte1 = cartesComparees[0].dataset.valeurCarte;
             let vCarte2 = cartesComparees[1].dataset.valeurCarte;
 
-            // --- REVERSE MODE LOGIC ---
+            // Determine if it's a match based on the active mode
             let isMatch = false;
             if (reverseModeEnabled) {
-                isMatch = (oppositesMap[vCarte1] === vCarte2);
+                isMatch = (oppositePairs[vCarte1] === vCarte2);
             } else {
                 isMatch = (vCarte1 === vCarte2);
             }
 
             if (isMatch) {
-                if (chaosModeEnabled)
-                {
+                if (chaosModeEnabled) {
                     shuffleCardsPremium();
                 }
 
@@ -272,10 +270,9 @@ let tempStart = false;
 let nbEssaisVal = 0;
 let cartesComparees = []
 let chaosModeEnabled = false;
-let reverseModeEnabled = false; // Added Reverse Mode toggle
+let reverseModeEnabled = false;
 
-// Opposite Pairs Mapping
-const oppositesMap = {
+const oppositePairs = {
     "p1": "p4", "p4": "p1",
     "p2": "p5", "p5": "p2",
     "p3": "p6", "p6": "p3"
@@ -342,6 +339,7 @@ async function decrementFreeUse(uid) {
 
 function startExtraMode() {
     chaosModeEnabled = true;
+    reverseModeEnabled = false; // Add this line to prevent overlap
 
     for (let carte of lstCartes) {
         carte.baseImg.src = "img/monkechaos.png";
@@ -358,12 +356,6 @@ function startExtraMode() {
         .classList.remove("hidden");
 
     shuffleCardsPremium();
-}
-
-// Added Reverse Mode function
-function startReverseMode() {
-    reverseModeEnabled = true;
-    // You can add reverse-mode specific UI/theme changes here just like startExtraMode()
 }
 
 function canAccessExtraModes(userData) {
@@ -501,3 +493,48 @@ if (confirmPremiumPaymentBtn) {
         confirmPremiumPaymentBtn.innerText = "Continue to payment";
     });
 }
+
+// --- REVERSE MODE LOGIC ---
+function startReverseMode() {
+    reverseModeEnabled = true;
+    chaosModeEnabled = false; // Ensure chaos mode doesn't overlap
+
+    for (let carte of lstCartes) {
+        carte.baseImg.src = "img/monkeoppo.png";
+    }
+
+    document.getElementById("memoryIcon").src = "img/monkeoppo.png";
+    document.getElementById("ReverseSuccessOverlay").classList.remove("hidden");
+}
+
+async function onReverseModeClick() {
+    if (!currentUser) {
+        loginToast.show();
+        return;
+    }
+
+    const userData = await getUserData(currentUser.uid);
+
+    if (!canAccessExtraModes(userData)) {
+        showPaywall(); // Reuses your existing paywall
+        return;
+    }
+
+    if (!userData.hasPremium) {
+        await decrementFreeUse(currentUser.uid);
+    }
+
+    startReverseMode();
+}
+
+// Bind the new button to the click function
+document.getElementById("btnReverse").addEventListener("click", onReverseModeClick);
+
+// Bind the continue button on the Reverse overlay to close it
+document.getElementById("continueReverseBtn").addEventListener("click", () => {
+    document.getElementById("ReverseSuccessOverlay").classList.add("hidden");
+
+    let offcanvas = document.getElementById("offCanvasJeu");
+    let bsoffcanvas = bootstrap.Offcanvas.getInstance(offcanvas);
+    if (bsoffcanvas) bsoffcanvas.hide();
+});
