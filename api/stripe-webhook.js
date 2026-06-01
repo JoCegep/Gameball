@@ -1,5 +1,14 @@
 import Stripe from "stripe";
 import admin from "firebase-admin";
+import { buffer } from "micro";
+
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
+
+export const config = {
+    api: {
+        bodyParser: false
+    }
+};
 
 function initFirebaseAdmin() {
     if (admin.apps.length) return;
@@ -19,33 +28,8 @@ function initFirebaseAdmin() {
     });
 }
 
-async function getRawBody(req) {
-    if (req.body) {
-        if (typeof req.body === "string") {
-            return Buffer.from(req.body);
-        }
-
-        if (Buffer.isBuffer(req.body)) {
-            return req.body;
-        }
-
-        return Buffer.from(JSON.stringify(req.body));
-    }
-
-    const chunks = [];
-
-    for await (const chunk of req) {
-        chunks.push(typeof chunk === "string" ? Buffer.from(chunk) : chunk);
-    }
-
-    return Buffer.concat(chunks);
-}
-
 export default async function handler(req, res) {
     console.log("=== STRIPE WEBHOOK START ===");
-    console.log("STRIPE_WEBHOOK_SECRET exists:", !!process.env.STRIPE_WEBHOOK_SECRET);
-    console.log("FIREBASE_SERVICE_ACCOUNT_BASE64 exists:", !!process.env.FIREBASE_SERVICE_ACCOUNT_BASE64);
-    console.log("SKIP_STRIPE_SIGNATURE_CHECK:", process.env.SKIP_STRIPE_SIGNATURE_CHECK);
 
     if (req.method !== "POST") {
         return res.status(405).send("Method not allowed");
@@ -56,37 +40,20 @@ export default async function handler(req, res) {
             throw new Error("Missing STRIPE_SECRET_KEY");
         }
 
+        if (!process.env.STRIPE_WEBHOOK_SECRET) {
+            throw new Error("Missing STRIPE_WEBHOOK_SECRET");
+        }
+
         initFirebaseAdmin();
 
-        const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
-        const rawBody = await getRawBody(req);
-        const rawBodyString = rawBody.toString("utf8");
+        const signature = req.headers["stripe-signature"];
+        const rawBody = await buffer(req);
 
-        console.log("Raw body length:", rawBody.length);
-
-        let event;
-
-        if (process.env.SKIP_STRIPE_SIGNATURE_CHECK === "true") {
-            console.warn("Skipping Stripe signature verification. Local testing only.");
-
-            if (!rawBodyString) {
-                throw new Error("Webhook body is empty");
-            }
-
-            event = JSON.parse(rawBodyString);
-        } else {
-            if (!process.env.STRIPE_WEBHOOK_SECRET) {
-                throw new Error("Missing STRIPE_WEBHOOK_SECRET");
-            }
-
-            const signature = req.headers["stripe-signature"];
-
-            event = stripe.webhooks.constructEvent(
-                rawBody,
-                signature,
-                process.env.STRIPE_WEBHOOK_SECRET
-            );
-        }
+        const event = stripe.webhooks.constructEvent(
+            rawBody,
+            signature,
+            process.env.STRIPE_WEBHOOK_SECRET
+        );
 
         console.log("Webhook event:", event.type);
 
