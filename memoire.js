@@ -5,6 +5,7 @@ import { getFirestore, doc, getDoc, updateDoc } from
         "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
 import { app } from "./base.js"; // app initialisee
+import { getUserData } from "./Auth.js";
 
 // logique acces a utilisateur connecte
 const auth = getAuth(app);
@@ -248,7 +249,7 @@ for (let i = 0; i < cartes.length; i++) {
             let vCarte1 = cartesComparees[0].dataset.valeurCarte;
             let vCarte2 = cartesComparees[1].dataset.valeurCarte;
             if (vCarte1 === vCarte2) {
-                if (true) // if user has premium
+                if (chaosModeEnabled) // if user has premium
                 {
                     shuffleCardsPremium();
                 }
@@ -329,9 +330,70 @@ for (let i = 0; i < cartes.length; i++) {
 let tempStart = false;
 let nbEssaisVal = 0;
 let cartesComparees = []
+let chaosModeEnabled = false;
 
-btnMix.addEventListener("click", async function () {
-    console.log(cartesComparees);
+// extra modes logic
+function showPaywall() {
+    const modalEl = document.getElementById("premiumConfirmModal");
+    const modal = bootstrap.Modal.getOrCreateInstance(modalEl);
+
+    modal.show();
+}
+
+async function startStripeCheckout() {
+    const user = auth.currentUser;
+
+    if (!user) {
+        loginToast.show();
+        return;
+    }
+
+    try {
+        const token = await user.getIdToken();
+
+        const response = await fetch("/api/create-checkout-session", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}`
+            }
+        });
+
+        const text = await response.text();
+
+        console.log("Checkout response status:", response.status);
+        console.log("Checkout response body:", text);
+
+        if (!response.ok) {
+            alert("Could not start payment. Check console/terminal.");
+            return;
+        }
+
+        const data = JSON.parse(text);
+        window.location.href = data.url;
+    } catch (error) {
+        console.error("Paywall error:", error);
+        alert("Payment could not be started. Check console.");
+    }
+}
+
+async function decrementFreeUse(uid) {
+    const ref = doc(db, "users", uid);
+    const snap = await getDoc(ref);
+
+    if (!snap.exists()) return;
+
+    const data = snap.data();
+    const currentFreeGames = data.freeGames ?? 0;
+
+    await updateDoc(ref, {
+        freeGames: Math.max(currentFreeGames - 1, 0)
+    });
+}
+
+function startExtraMode() {
+    chaosModeEnabled = true;
+
     for (let carte of lstCartes) {
         carte.baseImg.src = "img/monkechaos.png";
     }
@@ -342,11 +404,43 @@ btnMix.addEventListener("click", async function () {
     document.getElementById("memoryIcon").src = "img/monkechaos.png";
 
     document.body.classList.add("chaos-theme");
+
     document
         .getElementById("ShuffleSuccessOverlay")
         .classList.remove("hidden");
+
     shuffleCardsPremium();
-})
+}
+
+function canAccessExtraModes(userData) {
+    if (!userData) return false;
+
+    if (userData.hasPremium === true) return true;
+
+    return (userData.freeGames ?? 0) > 0;
+}
+
+async function onExtraModeClick() {
+    if (!currentUser) {
+        loginToast.show();
+        return;
+    }
+
+    const userData = await getUserData(currentUser.uid);
+
+    if (!canAccessExtraModes(userData)) {
+        showPaywall();
+        return;
+    }
+
+    if (!userData.hasPremium) {
+        await decrementFreeUse(currentUser.uid);
+    }
+
+    startExtraMode();
+}
+
+btnMix.addEventListener("click", onExtraModeClick)
 
 document.getElementById("continueShuffleBtn").addEventListener("click", () => {
     document
@@ -436,4 +530,23 @@ melanger(lstCartes);
 
 for (const carte of lstCartes){
     containerCartes.append(carte);
+}
+
+const confirmPremiumPaymentBtn = document.getElementById("confirmPremiumPaymentBtn");
+
+if (confirmPremiumPaymentBtn) {
+    confirmPremiumPaymentBtn.addEventListener("click", async () => {
+        confirmPremiumPaymentBtn.disabled = true;
+        confirmPremiumPaymentBtn.innerText = "Redirecting...";
+
+        const modalEl = document.getElementById("premiumConfirmModal");
+        const modal = bootstrap.Modal.getOrCreateInstance(modalEl);
+
+        modal.hide();
+
+        await startStripeCheckout();
+
+        confirmPremiumPaymentBtn.disabled = false;
+        confirmPremiumPaymentBtn.innerText = "Continue to payment";
+    });
 }
