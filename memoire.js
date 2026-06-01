@@ -4,10 +4,9 @@ import { getAuth, onAuthStateChanged, signOut } from
 import { getFirestore, doc, getDoc, updateDoc } from
         "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-import { app } from "./base.js"; // app initialisee
+import { app } from "./base.js";
 import { getUserData } from "./Auth.js";
 
-// logique acces a utilisateur connecte
 const auth = getAuth(app);
 const db = getFirestore(app);
 const btnLogout = document.getElementById("logoutIcon");
@@ -24,7 +23,6 @@ onAuthStateChanged(auth, async (user) => {
 
     currentUser = user;
     btnCompte.classList.remove("invisible");
-    // afficher le nom utilisateur
     document.getElementById("pseudo").innerText = user.displayName;
 
     const ref = doc(db, "users", user.uid);
@@ -36,13 +34,11 @@ onAuthStateChanged(auth, async (user) => {
 
     if (snap.exists()) {
         const data = snap.data();
-        // afficher le score utilisateur
         essais.innerText = data.bestAttempts ?? "None";
         tempsRecord.innerText = data.bestTime ?? "None";
     }
 });
 
-// toast icon
 const toastEl = document.getElementById("loginToast");
 const loginToast = new bootstrap.Toast(toastEl);
 
@@ -53,10 +49,6 @@ setTimeout(async () => {
             loginToast.show();
         }, 100);
 
-        // auto-hide after a few seconds
-        // setTimeout(() => {
-        //     loginToast.hide();
-        // }, 6000);
     } else {
         loginToast.hide();
     }
@@ -75,12 +67,10 @@ async function saveScore(attempts, time) {
 
     const updates = {};
 
-    // Best attempts (lower is better)
     if (data.bestAttempts === null || attempts < data.bestAttempts) {
         updates.bestAttempts = attempts;
     }
 
-    // Best time (convert to seconds)
     if (
         data.bestTime === null ||
         convertirTempsSecondes(time) < convertirTempsSecondes(data.bestTime)
@@ -93,14 +83,10 @@ async function saveScore(attempts, time) {
     }
 }
 
-// deconnexion
 btnLogout.addEventListener("click", async () => {
     try {
         await signOut(auth);
         console.log("User logged out");
-
-        // Optional but recommended
-        //localStorage.removeItem("utilisateurActuel");
 
         // Redirect or refresh UI
         window.location.href = "index.html";
@@ -140,7 +126,7 @@ let lstCartes = [];
 async function updateScoreUtilisateur(utilisateur){
     try {
         const response = await fetch(`https://693652e4f8dc350aff30789a.mockapi.io/jeu/utilisateurs/${utilisateur.id}`, {
-            method: "PUT", // put pcq mockapi ne supporte pas patch
+            method: "PUT",
             headers: {
                 "Content-Type": "application/json"
             },
@@ -165,19 +151,9 @@ function convertirTempsSecondes(temps){
     return secondes;
 }
 
-// controle de pouvoir cliquer carte ou non
 let clickable = true;
 
 for (let i = 0; i < cartes.length; i++) {
-    // Creation de cartes differentes avec images
-    /*
-    old card version
-
-    const carteBaseImg = document.createElement("p");
-    carteBaseImg.setAttribute("face", "hidden");
-    carteBaseImg.id = `carteBase`
-    carteBaseImg.innerText = "❓";
-     */
     let carteBaseImg = new Image();
     carteBaseImg.setAttribute("face", "hidden");
     carteBaseImg.id = `carteBase`
@@ -201,23 +177,8 @@ for (let i = 0; i < cartes.length; i++) {
     carteImg.dataset.valeurCarte = cartes[i][1];
     carteImg.setAttribute("face", "hidden");
 
-    // carteImg.addEventListener("click", () => {
-    //     if (document.body.style.pointerEvents === 'none') {
-    //         return; // ADD THIS CHECK - don't allow toggling during comparison
-    //     }
-    //     if (cartesComparees.length >= 2) {
-    //         carteImg.style.pointerEvents = "none";
-    //     }
-    //     else{
-    //         carteBaseImg.classList.toggle("invisible");
-    //         carteValeurImg.classList.toggle("invisible");
-    //     }
-    // })
-
-    // Ajout de cartes dans le container
     lstCartes.push(carteImg);
 
-    // logique du jeu
     carteImg.addEventListener("click", async function () {
         if (carteImg.getAttribute("face") === "shown") {
             return;
@@ -228,7 +189,7 @@ for (let i = 0; i < cartes.length; i++) {
         }
 
         if (document.body.style.pointerEvents === 'none') {
-            return; // ADD THIS CHECK HERE TOO
+            return;
         }
         if (!tempStart) {
             compterTemps();
@@ -244,12 +205,12 @@ for (let i = 0; i < cartes.length; i++) {
         } else if (cartesComparees.length === 1) {
             clickable = false;
             cartesComparees.push(carteImg);
-            document.body.style.pointerEvents = 'none'; // desactiver clicks de tous
-            cartesComparees[1].style.pointerEvents = "none"; // desactiver 2e carte, empecher d etre recliquee
+            document.body.style.pointerEvents = 'none';
+            cartesComparees[1].style.pointerEvents = "none";
             let vCarte1 = cartesComparees[0].dataset.valeurCarte;
             let vCarte2 = cartesComparees[1].dataset.valeurCarte;
             if (vCarte1 === vCarte2) {
-                if (chaosModeEnabled) // if user has premium
+                if (chaosModeEnabled)
                 {
                     shuffleCardsPremium();
                 }
@@ -262,51 +223,21 @@ for (let i = 0; i < cartes.length; i++) {
                 document.body.style.pointerEvents = 'auto'; // ADD THIS LINE
                 clickable = true;
                 if (pairesDevinees === 6) {
-                    // ecran succes
+                    // screen succes
                     essaisSuccess.innerText = `${nbEssaisVal}`;
                     tempsSuccess.innerText = `${nbTemps.innerText}`;
 
                     const winModal = bootstrap.Modal.getOrCreateInstance(winModalEl);
                     winModal.show();
 
-                    //logique firestore
+                    //logic firestore
                     try {
                     await saveScore(nbEssaisVal, nbTemps.innerText);
                     } catch (e) {
                         console.warn("Score not saved:", e);
                     }
-
-                    // sauvegarder score joueur localement
-                    // sauvegarder slm lorsque superieur a l ancient score
-
-                    /*
-                    Logique sauvegarde utilisateur avec mockapi
-
-                    if (utilisateurConnecte.recordVbMemoire != null) {
-                        if (utilisateurConnecte.recordVbMemoire > nbEssaisVal) {
-                            utilisateurConnecte.recordVbMemoire = nbEssaisVal;
-                        }
-                    } else {
-                        utilisateurConnecte.recordVbMemoire = nbEssaisVal;
-                    }
-
-                    // eux verifier le temps
-                    if (utilisateurConnecte.tempsrecordVbMemoire != null) {
-                        if (convertirTempsSecondes(utilisateurConnecte.tempsrecordVbMemoire) > convertirTempsSecondes(nbTemps.innerText)) {
-                            utilisateurConnecte.tempsrecordVbMemoire = nbTemps.innerText;
-                        }
-                    } else {
-                        utilisateurConnecte.tempsrecordVbMemoire = nbTemps.innerText;
-                    }
-
-                    localStorage.setItem("utilisateurActuel", JSON.stringify(utilisateurConnecte));
-
-                    // sauvegarder score joueur dans l api
-                    let success = updateScoreUtilisateur(utilisateurConnecte);
-                    */
                 }
             } else {
-                //document.body.style.pointerEvents = 'none'; // fix tire du ai overview de google
                 nbEssaisVal++;
                 setTimeout(() => {
                     carteBaseImg.classList.toggle("invisible");
@@ -398,7 +329,6 @@ function startExtraMode() {
         carte.baseImg.src = "img/monkechaos.png";
     }
 
-    // changer images
     btnLogout.src = "img/log-outchaos.png";
     document.getElementById("accountIcon").src = "img/accountchaos.png";
     document.getElementById("memoryIcon").src = "img/monkechaos.png";
@@ -447,7 +377,6 @@ document.getElementById("continueShuffleBtn").addEventListener("click", () => {
         .getElementById("ShuffleSuccessOverlay")
         .classList.add("hidden");
 
-    // fermer offcanvas
     let offcanvas = document.getElementById("offCanvasJeu")
 
     let bsoffcanvas = bootstrap.Offcanvas.getInstance(offcanvas);
@@ -506,26 +435,24 @@ function compterTemps(){
     setInterval(() => {
         if (pairesDevinees < 6) {
             let tempsPasse = ++debut;
-            // Solution fortement inspiree du AI overview du a longue recherche, mais condensee a mon gout
+
             const minutesFormatees = String(Math.floor(tempsPasse / 60)).padStart(2, "0");
             const secondesFormatees = String(tempsPasse % 60).padStart(2, "0");
-            // avait deja fait cette partie moi meme
+
             nbTemps.innerText = `${minutesFormatees}:${secondesFormatees}`;
         }
 
     }, 1000)
 }
 
-// Mélanger les cartes (méthode Fisher–Yates)
 function melanger(tab) {
     for (let i = tab.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1)); // indice aléatoire entre 0 et i
-        [tab[i], tab[j]] = [tab[j], tab[i]]; // échange
+        [tab[i], tab[j]] = [tab[j], tab[i]];
     }
     return tab;
 }
 
-//afficherUser();
 melanger(lstCartes);
 
 for (const carte of lstCartes){
