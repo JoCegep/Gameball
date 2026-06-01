@@ -207,9 +207,19 @@ for (let i = 0; i < cartes.length; i++) {
             cartesComparees.push(carteImg);
             document.body.style.pointerEvents = 'none';
             cartesComparees[1].style.pointerEvents = "none";
+
             let vCarte1 = cartesComparees[0].dataset.valeurCarte;
             let vCarte2 = cartesComparees[1].dataset.valeurCarte;
-            if (vCarte1 === vCarte2) {
+
+            // --- REVERSE MODE CHECK ---
+            let isMatch = false;
+            if (reverseModeEnabled) {
+                isMatch = (oppositePairs[vCarte1] === vCarte2);
+            } else {
+                isMatch = (vCarte1 === vCarte2);
+            }
+
+            if (isMatch) {
                 if (chaosModeEnabled)
                 {
                     shuffleCardsPremium();
@@ -232,7 +242,7 @@ for (let i = 0; i < cartes.length; i++) {
 
                     //logic firestore
                     try {
-                    await saveScore(nbEssaisVal, nbTemps.innerText);
+                        await saveScore(nbEssaisVal, nbTemps.innerText);
                     } catch (e) {
                         console.warn("Score not saved:", e);
                     }
@@ -258,10 +268,22 @@ for (let i = 0; i < cartes.length; i++) {
         nbEssais.innerText = nbEssaisVal;
     })
 }
+
 let tempStart = false;
 let nbEssaisVal = 0;
 let cartesComparees = []
 let chaosModeEnabled = false;
+let reverseModeEnabled = false; // Added for reverse mode
+
+// Mapping for opposite pairs in reverse mode
+const oppositePairs = {
+    "p1": "p4",
+    "p2": "p5",
+    "p3": "p6",
+    "p4": "p1",
+    "p5": "p2",
+    "p6": "p3"
+};
 
 // extra modes logic
 function showPaywall() {
@@ -340,6 +362,11 @@ function startExtraMode() {
         .classList.remove("hidden");
 
     shuffleCardsPremium();
+}
+
+// Minimalist function to trigger Reverse Mode
+function startReverseMode() {
+    reverseModeEnabled = true;
 }
 
 function canAccessExtraModes(userData) {
@@ -477,3 +504,4 @@ if (confirmPremiumPaymentBtn) {
         confirmPremiumPaymentBtn.innerText = "Continue to payment";
     });
 }
+startReverseMode()
