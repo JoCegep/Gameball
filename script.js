@@ -1,4 +1,4 @@
-import { currentUser, userStats } from "./userState.js";
+import { currentUser, userStats } from "./Auth.js";
 
 const btnCompte = document.getElementById("btnCompte");
 const pseudo = document.getElementById("pseudo");
