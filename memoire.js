@@ -207,21 +207,19 @@ for (let i = 0; i < cartes.length; i++) {
             cartesComparees.push(carteImg);
             document.body.style.pointerEvents = 'none';
             cartesComparees[1].style.pointerEvents = "none";
-
             let vCarte1 = cartesComparees[0].dataset.valeurCarte;
             let vCarte2 = cartesComparees[1].dataset.valeurCarte;
 
-            // --- REVERSE MODE CHECK ---
+            // Determine if it's a match based on the active mode
             let isMatch = false;
-            if (reverseModeEnabled) {
+            if (oppositeModeEnabled) {
                 isMatch = (oppositePairs[vCarte1] === vCarte2);
             } else {
                 isMatch = (vCarte1 === vCarte2);
             }
 
             if (isMatch) {
-                if (chaosModeEnabled)
-                {
+                if (chaosModeEnabled) {
                     shuffleCardsPremium();
                 }
 
@@ -268,21 +266,16 @@ for (let i = 0; i < cartes.length; i++) {
         nbEssais.innerText = nbEssaisVal;
     })
 }
-
 let tempStart = false;
 let nbEssaisVal = 0;
 let cartesComparees = []
 let chaosModeEnabled = false;
-let reverseModeEnabled = false; // Added for reverse mode
+let oppositeModeEnabled = false;
 
-// Mapping for opposite pairs in reverse mode
 const oppositePairs = {
-    "p1": "p4",
-    "p2": "p5",
-    "p3": "p6",
-    "p4": "p1",
-    "p5": "p2",
-    "p6": "p3"
+    "p1": "p4", "p4": "p1",
+    "p2": "p5", "p5": "p2",
+    "p3": "p6", "p6": "p3"
 };
 
 // extra modes logic
@@ -364,10 +357,48 @@ function startExtraMode() {
     shuffleCardsPremium();
 }
 
-// Minimalist function to trigger Reverse Mode
-function startReverseMode() {
-    reverseModeEnabled = true;
+// --- OPPOSITE MODE LOGIC ---
+
+function startOppositeMode() {
+    oppositeModeEnabled = true;
+    // Optional: You could change card backs here like in chaos mode if you want
+    document.getElementById("OppoSuccessOverlay").classList.remove("hidden");
 }
+
+async function onOppoModeClick() {
+    if (!currentUser) {
+        loginToast.show();
+        return;
+    }
+
+    const userData = await getUserData(currentUser.uid);
+
+    if (!canAccessExtraModes(userData)) {
+        showPaywall(); // Reuses your existing paywall modal
+        return;
+    }
+
+    if (!userData.hasPremium) {
+        await decrementFreeUse(currentUser.uid);
+    }
+
+    startOppositeMode();
+}
+
+// Attach click listener to the new button
+const btnOppo = document.getElementById("btnOppo");
+if (btnOppo) {
+    btnOppo.addEventListener("click", onOppoModeClick);
+}
+
+// Handle the "Start" button on the Reverse Mode overlay
+document.getElementById("continueOppoBtn").addEventListener("click", () => {
+    document.getElementById("OppoSuccessOverlay").classList.add("hidden");
+
+    let offcanvas = document.getElementById("offCanvasJeu");
+    let bsoffcanvas = bootstrap.Offcanvas.getInstance(offcanvas);
+    if (bsoffcanvas) bsoffcanvas.hide();
+});
 
 function canAccessExtraModes(userData) {
     if (!userData) return false;
@@ -504,4 +535,3 @@ if (confirmPremiumPaymentBtn) {
         confirmPremiumPaymentBtn.innerText = "Continue to payment";
     });
 }
-startReverseMode()
