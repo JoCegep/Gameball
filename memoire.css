@@ -131,12 +131,10 @@ h1{
 }
 
 #pointage div img{
-    filter: invert(100%); /* ai overview answer to invert img color */
     transition: 200ms;
 }
 
 #pointage div img:hover{
-    filter: invert(100%); /* ai overview answer to invert img color */
     cursor: pointer;
     transform: scale(1.1);
     opacity: 0.5;
@@ -157,28 +155,134 @@ h1{
     max-width: none;
 }
 
+/* Victory modal */
 .win-modal {
-    border-radius: 24px;
-    background: #e7f1ff;
     border: none;
-    padding: 2rem;
+    border-radius: 28px;
+    overflow: hidden;
+    background:
+            radial-gradient(circle at top left, rgba(255,255,255,0.95), transparent 35%),
+            linear-gradient(135deg, paleturquoise, #16bfe6);
+    box-shadow: 0 22px 55px rgba(0, 55, 90, 0.35);
+    padding: 28px;
+    font-family: 'Fredoka One', cursive;
 }
 
-.win-banner {
-    position: absolute;
-    top: -20px;
-    left: 50%;
-    transform: translateX(-50%);
-    background: var(--bg-w-banner);
-    padding: 0.5rem 1.5rem;
+.win-top {
+    text-align: center;
+    background: rgba(255, 255, 255, 0.92);
+    border-radius: 24px;
+    padding: 28px 22px;
+    box-shadow: 0 10px 25px rgba(0, 70, 110, 0.18);
+}
+
+.win-game-icon {
+    width: 120px;
+    height: 120px;
+    object-fit: cover;
+    border-radius: 26px;
+    background: white;
+    box-shadow: 0 8px 18px rgba(0, 70, 110, 0.22);
+    margin-bottom: 16px;
+}
+
+.win-top h2 {
+    margin: 0;
+    font-size: clamp(2.2rem, 8vw, 3.6rem);
+    color: #0d6efd;
+    text-shadow: 0 3px 0 rgba(13, 110, 253, 0.16);
+}
+
+.win-top p {
+    margin: 8px 0 0;
+    color: #44677d;
+    font-size: 1.05rem;
+}
+
+.win-stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+    margin: 20px 0;
+}
+
+.win-stat-card {
+    background: white;
+    border-radius: 20px;
+    padding: 16px;
+    text-align: center;
+    box-shadow: 0 8px 18px rgba(0, 70, 110, 0.18);
+}
+
+.win-stat-label {
+    display: block;
+    color: #44677d;
+    font-size: 0.95rem;
+    margin-bottom: 4px;
+}
+
+.win-stat-value {
+    display: block;
+    color: #0d6efd;
+    font-size: 2rem;
+    line-height: 1;
+}
+
+.win-actions {
+    display: flex;
+    gap: 14px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.win-btn {
+    min-width: 145px;
+    min-height: 54px;
     border-radius: 999px;
-    font-weight: bold;
+    text-decoration: none;
+    border: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    font-size: 1rem;
+    transition: 200ms;
+    box-shadow: 0 8px 18px rgba(0, 70, 110, 0.20);
+}
+
+.win-btn:hover {
+    transform: translateY(-3px) scale(1.03);
+}
+
+.win-btn img {
+    width: 24px;
+    height: 24px;
+    object-fit: contain;
+}
+
+.win-btn-primary {
+    background: #0d6efd;
     color: white;
 }
 
-.stars {
-    font-size: 2rem;
-    color: gold;
+.win-btn-secondary {
+    background: white;
+    color: #0d6efd;
+}
+
+@media (max-width: 480px) {
+    .win-modal {
+        padding: 20px;
+        border-radius: 22px;
+    }
+
+    .win-stats {
+        grid-template-columns: 1fr;
+    }
+
+    .win-btn {
+        width: 100%;
+    }
 }
 
 .actions button {

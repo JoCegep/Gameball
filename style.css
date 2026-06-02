@@ -1,63 +1,153 @@
-body{
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
     font-family: 'Fredoka One', cursive;
     color: black;
-    background-color: paleturquoise;
+    background:
+            radial-gradient(circle at top left, rgba(255,255,255,0.35), transparent 28%),
+            linear-gradient(135deg, #36f0d3, #13c4e8);
+    overflow-x: hidden;
 }
 
-#container-total{
+.hidden {
+    display: none !important;
+}
+
+#container-total {
     position: relative;
+    min-height: 100vh;
+    padding: 24px;
 }
 
-#container-connexion{
+/* Left floating menu, Poki-inspired */
+#btnMenu,
+#btnCompte {
+    position: fixed;
+    left: 18px;
+    z-index: 100;
+    width: 76px;
+    height: 76px;
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 20px;
+    box-shadow: 2px 2px 15px #44677d;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#btnMenu,
+#btnCompte {
+    top: 18px;
+    left: 18px;
+}
+
+#menuIcon,
+#compteIcon {
+    width: 34px;
+    height: 34px;
+    margin: 0 !important;
+    transition: 200ms;
+}
+
+#menuIcon:hover,
+#compteIcon:hover {
+    transform: scale(1.15);
+    cursor: pointer;
+    opacity: 0.65;
+}
+
+/* Game area */
+#container-jeux {
+    min-height: calc(100vh - 48px);
+    padding-left: 112px;
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-start;
+}
+
+.game-link {
+    display: block;
+    width: clamp(180px, 26vw, 320px);
+    aspect-ratio: 1 / 1;
+    margin-top: 60px !important;
+    margin-left: 0 !important;
+}
+
+.jeu {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 22px !important;
+    box-shadow: 0 12px 28px rgba(0, 64, 95, 0.35);
+    transition: 200ms;
+    border: none;
+    padding: 0;
+    background-color: white;
+}
+
+.jeu:hover {
+    transform: translateY(-6px) scale(1.04);
+}
+
+/* Login/register offcanvas */
+#offcanvasWithBothOptions,
+.offcanvas {
+    background:
+            radial-gradient(circle at top left, rgba(255,255,255,0.35), transparent 30%),
+            linear-gradient(135deg, #36f0d3, #13c4e8);
+}
+
+#container-connexion {
     position: relative;
     z-index: 3;
     padding: 20px 0;
 }
 
-#container-jeux{
-    width: 98vw;
-    height: 25vh;
-    z-index: 1;
-    position: relative;
-    display: flex;
-    justify-content: center;
+#container-variant {
+    box-shadow: 2px 2px 15px #44677d;
+    background-color: white;
+    border-radius: 18px;
 }
 
-#menuIcon{
+/* Account offcanvas */
+#container-utilisateur {
+    box-shadow: 2px 2px 15px #44677d;
+    background-color: white;
+    border-radius: 18px;
+}
+
+#container-stats {
+    box-shadow: 2px 2px 15px #44677d;
+    background-color: white;
+    border-radius: 18px;
+    width: 95%;
+    align-self: center;
+}
+
+#accountIcon,
+#logoutIcon {
+    width: 48px;
+    height: 48px;
+    object-fit: contain;
+}
+
+#logoutIcon {
     transition: 200ms;
-    position: relative;
-    z-index: 4;
 }
 
-#menuIcon:hover{
-    transform: scale(1.1);
+#logoutIcon:hover {
     cursor: pointer;
+    transform: scale(1.1);
     opacity: 0.5;
 }
 
-.game-link {
-    display: inline-block; /* prevents full-width stretch */
-}
-
-.jeu {
-    border-radius: 10%;
-    box-shadow: 2px 2px 15px #44677d;
-    transition: 200ms;
-    border: 3px black solid;
-}
-
-.jeu:hover {
-    transform: scale(1.1);
-}
-
-#offcanvasWithBothOptions{
-    background-color: paleturquoise;
-}
-
-#container-variant{
-    box-shadow: 2px 2px 15px #44677d;
-    background-color: white;
-    border-radius: 10px;
+#memoryIcon {
+    border-radius: 16px;
+    object-fit: cover;
 }
 
 /* Fullscreen overlay */
@@ -72,12 +162,6 @@ body{
     z-index: 9999;
 }
 
-/* Hidden state */
-.hidden {
-    display: none;
-}
-
-/* Card */
 .overlay-card {
     background: #0b4fa3;
     color: white;
@@ -113,48 +197,8 @@ body{
     background: #1495e6;
 }
 
-/* offcanvas account */
-#container-utilisateur{
-    box-shadow: 2px 2px 15px #44677d;
-    background-color: white;
-    border-radius: 10px;
-}
-
-#container-stats{
-    box-shadow: 2px 2px 15px #44677d;
-    background-color: white;
-    border-radius: 10px;
-    width: 95%;
-    align-self: center;
-}
-
-.offcanvas{
-    background-color: paleturquoise;
-}
-
-/* account btn hover */
-#compteIcon{
-    transition: 200ms;
-}
-
-#compteIcon:hover{
-    cursor: pointer;
-    transform: scale(1.1);
-    opacity: 0.5;
-}
-
-#logoutIcon{
-    transition: 200ms;
-}
-
-/* logout btn hover */
-#logoutIcon:hover{
-    cursor: pointer;
-    transform: scale(1.1);
-    opacity: 0.5;
-}
-
-.popOverConnexion{
+/* Popover */
+.popOverConnexion {
     font-family: 'Fredoka One', cursive;
     background: #0d6efd;
     border: 1px solid white;
@@ -167,38 +211,67 @@ body{
     color: #e5e7eb;
 }
 
-/*
-.e-recherche{
-    border-color: transparent;
-    background-color: transparent;
+/* Tablet */
+@media (max-width: 768px) {
+    #container-total {
+        padding: 16px;
+        padding-top: 96px;
+    }
+
+    #btnMenu,
+    #btnCompte {
+        top: 16px;
+        left: 16px;
+    }
+
+    #btnCompte {
+        left: 84px;
+    }
+
+    #menuIcon,
+    #compteIcon {
+        width: 28px;
+        height: 28px;
+    }
+
+    #container-jeux {
+        padding-left: 0;
+        justify-content: center;
+        min-height: auto;
+    }
+
+    .game-link {
+        width: clamp(180px, 60vw, 300px);
+        margin-top: 20px !important;
+    }
 }
 
-.e-recherche:focus{
-    border-color: transparent;
-    background-color: transparent;
-    outline: transparent;
-}
+/* Phone */
+@media (max-width: 480px) {
+    #container-total {
+        padding: 12px;
+        padding-top: 90px;
+    }
 
-#v-recherche{
-    width: 90%;
-}
+    #btnMenu,
+    #btnCompte {
+        width: 54px;
+        height: 54px;
+    }
 
-#btnRecherche{
-    position: absolute;
-    left: 90%;
-    transition: 200ms;
-}
-#btnRecherche:hover{
-    transform: scale(1.1);
-}
+    #btnCompte {
+        left: 16px;
+    }
 
-#recherche{
-    position: absolute;
-    top: 10vh;
-    left: 40vw;
-    z-index: 1;
-    width: 300px;
-    border: 3px solid black;
-    border-radius: 10px;
+    .game-link {
+        width: min(82vw, 280px);
+    }
+
+    .overlay-card {
+        padding: 32px 24px;
+    }
+
+    .overlay-card h1 {
+        font-size: 34px;
+    }
 }
-*/
