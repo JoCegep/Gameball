@@ -321,7 +321,7 @@ for (let i = 0; i < cartes.length; i++) {
                     cartesComparees = []
                     document.body.style.pointerEvents = 'auto';
                     clickable = true;
-                }, 3000)
+                }, 1000)
             }
         }
         nbEssais.innerText = nbEssaisVal;
